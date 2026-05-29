@@ -10,6 +10,13 @@ data "aws_ssm_parameter" "database_subnet_ids" {
   name = "/${var.project}-${var.environment}-database_subnet_ids"
 }
 
+data "aws_ssm_parameter" "remote_user" {
+  name = "/remote-user-${var.project}"
+}
+
+data "aws_ssm_parameter" "remote_user_password" {
+  name = "/remote-user-password-${var.project}"
+}
 
 data "aws_ami" "roboshop_ami" {
   most_recent      = true

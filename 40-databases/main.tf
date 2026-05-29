@@ -15,8 +15,8 @@ resource "terraform_data" "mongodb_setup" {
   triggers_replace = [aws_instance.mongodb.id]
   connection {
     host = aws_instance.mongodb.private_ip
-    user = "ec2-user"
-    password = "DevOps321"
+    user = local.remote_user
+    password = local.remote_user_password
     type = "ssh"
   }
   #copy bootstarp into mongodb server
@@ -27,6 +27,6 @@ resource "terraform_data" "mongodb_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh" ]
+               "sh /tmp/bootstrap.sh mongodb" ]
   }
 }

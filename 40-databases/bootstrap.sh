@@ -1,4 +1,4 @@
 #!/bin/bash
-
-dny install ansible -y
-ansible-pull -u https://github.com/rahul-paladugu/roboshop-ansible-collection.git -e component=mongodb main.yaml
+component=$1
+dnf install ansible -y
+ansible-pull -U https://github.com/rahul-paladugu/roboshop-ansible-collection.git -e component=$component main.yaml
