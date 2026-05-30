@@ -17,3 +17,11 @@ data "aws_ssm_parameter" "bastion_sg_id" {
 data "aws_ssm_parameter" "mongodb_sg_id" {
   name = "/mongodb-${var.environment}-${var.project}/sg_id"
 }
+
+data "aws_ssm_parameter" "redis_sg_id" {
+  name = "/redis-${var.environment}-${var.project}/sg_id"
+}
+
+data "aws_ssm_parameter" "mongodb_sg_id" {
+  name = "/rabbitmq-${var.environment}-${var.project}/sg_id"
+}

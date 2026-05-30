@@ -22,3 +22,20 @@ resource "aws_vpc_security_group_ingress_rule" "mongodb_accepting_bastion" {
   ip_protocol = "tcp"
   to_port     = 22
 }
+#redis accepting traffic from bastion
+resource "aws_vpc_security_group_ingress_rule" "redis_accepting_bastion" {
+  security_group_id = local.redis_sg_id
+  referenced_security_group_id = local.bastion_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
+#rabbitmq accepting traffic from bastion
+resource "aws_vpc_security_group_ingress_rule" "rabbitmq_accepting_bastion" {
+  security_group_id = local.rabbitmq_sg_id
+  referenced_security_group_id = local.bastion_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
