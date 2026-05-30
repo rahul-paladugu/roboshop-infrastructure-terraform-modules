@@ -11,7 +11,7 @@ resource "aws_instance" "mongodb" {
   }
 }
 # Wait for instance status checks to pass
-resource "null_resource" "wait_for_redis" {
+resource "null_resource" "wait_for_mongodb" {
   depends_on = [aws_instance.redis]
 
   provisioner "local-exec" {
@@ -95,7 +95,7 @@ resource "aws_instance" "rabbitmq" {
   }
 }
 # Wait for instance status checks to pass
-resource "null_resource" "wait_for_redis" {
+resource "null_resource" "wait_for_rabbitmq" {
   depends_on = [aws_instance.rabbitmq]
 
   provisioner "local-exec" {
