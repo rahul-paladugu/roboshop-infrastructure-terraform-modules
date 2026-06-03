@@ -7,8 +7,8 @@ repo_url=https://github.com/rahul-paladugu/roboshop-configuration-ansible-for-te
 ansible_repo_directory=/opt/roboshop/ansible
 ansible_directory=roboshop-configuration-ansible-for-terrafrom
 
-mkdir -p $ansible_repo_directory
-mkdir -p /var/log/roboshop/
+sudo mkdir -p "$ansible_repo_directory"
+sudo mkdir -p "/var/log/roboshop/"
 log_file="/var/log/roboshop/ansible.log"
 
 cd $ansible_repo_directory
@@ -16,7 +16,7 @@ if [ -d "$ansible_directory" ]; then
   cd "$ansible_directory"
   git pull >&$log_file
 else
- mkdir -p "$ansible_directory"
+ sudo mkdir -p "$ansible_directory"
  cd $ansible_directory
  git clone "$repo_url" >&$log_file
 fi
