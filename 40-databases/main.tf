@@ -1,9 +1,9 @@
 #Mongodb server creation
 module "mongodb_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
-  components = [mongodb]
+  components = ["mongodb"]
   ami_id = local.ami_id
-  sg_ids = local.mongodb_sg_id
+  sg_ids = [local.mongodb_sg_id]
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
@@ -40,9 +40,9 @@ resource "terraform_data" "mongodb_setup" {
 #Redis server creation
 module "redis_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
-  components = [redis]
+  components = ["redis"]
   ami_id = local.ami_id
-  sg_ids = local.redis_sg_id
+  sg_ids = [local.redis_sg_id]
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
@@ -81,9 +81,9 @@ resource "terraform_data" "redis_setup" {
 #Rabbitmq server creation
 module "rabbitmq_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
-  components = [rabbitmq]
+  components = ["rabbitmq"]
   ami_id = local.ami_id
-  sg_ids = local.rabbitmq_sg_id
+  sg_ids = [local.rabbitmq_sg_id]
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
