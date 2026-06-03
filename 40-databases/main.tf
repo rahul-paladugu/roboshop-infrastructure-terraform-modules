@@ -3,7 +3,7 @@ module "mongodb_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
   components = [mongodb]
   ami_id = local.ami_id
-  sg_id = local.mongodb_sg_id
+  sg_ids = local.mongodb_sg_id
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
@@ -42,7 +42,7 @@ module "redis_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
   components = [redis]
   ami_id = local.ami_id
-  sg_id = local.redis_sg_id
+  sg_ids = local.redis_sg_id
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
@@ -83,7 +83,7 @@ module "rabbitmq_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
   components = [rabbitmq]
   ami_id = local.ami_id
-  sg_id = local.rabbitmq_sg_id
+  sg_ids = local.rabbitmq_sg_id
   instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
