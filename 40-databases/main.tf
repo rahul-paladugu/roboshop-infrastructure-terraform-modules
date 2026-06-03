@@ -4,6 +4,7 @@ module "mongodb_server" {
   components = [mongodb]
   ami_id = local.ami_id
   sg_id = local.mongodb_sg_id
+  instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
@@ -42,6 +43,7 @@ module "redis_server" {
   components = [redis]
   ami_id = local.ami_id
   sg_id = local.redis_sg_id
+  instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
@@ -82,6 +84,7 @@ module "rabbitmq_server" {
   components = [rabbitmq]
   ami_id = local.ami_id
   sg_id = local.rabbitmq_sg_id
+  instance_type = var.instance_type
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
