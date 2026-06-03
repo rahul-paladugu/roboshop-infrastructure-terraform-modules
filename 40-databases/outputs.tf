@@ -7,5 +7,5 @@ output "redis_instance_id" {
 }
 
 output "rabbitmq_instance_id" {
-  value = module.rabbitmq_instance_id
+  value = module.rabbitmq_server.instance_id
 }
