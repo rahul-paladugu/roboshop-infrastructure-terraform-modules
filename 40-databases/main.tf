@@ -5,6 +5,7 @@ module "mongodb_server" {
   ami_id = local.ami_id
   sg_ids = [local.mongodb_sg_id]
   instance_type = var.instance_type
+  subnet_id = local.db_subnet_id
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
@@ -44,6 +45,7 @@ module "redis_server" {
   ami_id = local.ami_id
   sg_ids = [local.redis_sg_id]
   instance_type = var.instance_type
+  subnet_id = local.db_subnet_id
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
@@ -85,6 +87,7 @@ module "rabbitmq_server" {
   ami_id = local.ami_id
   sg_ids = [local.rabbitmq_sg_id]
   instance_type = var.instance_type
+  subnet_id = local.db_subnet_id
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
