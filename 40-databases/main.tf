@@ -1,14 +1,12 @@
-resource "aws_instance" "mongodb" {
-  ami           = local.ami_id
-  instance_type = var.instance_type
-  subnet_id = local.db_subnet_id
-  vpc_security_group_ids = [local.mongodb_sg_id]
-
-  tags = {
-    Name = "mongodb-${var.environment}-${var.project}"
-    Terraform = "True"
-    Project = var.project
-  }
+#Mongodb server creation
+module "mongodb_server" {
+  source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
+  components = [mongodb]
+  ami_id = local.ami_id
+  sg_id = local.mongodb_sg_id
+  common_tags = var.common_tags
+  project = var.project
+  environment = var.environment
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_mongodb" {
@@ -38,18 +36,15 @@ resource "terraform_data" "mongodb_setup" {
                "sh /tmp/bootstrap.sh mongodb" ]
   }
 }
-#Create redis
-resource "aws_instance" "redis" {
-  ami           = local.ami_id
-  instance_type = var.instance_type
-  subnet_id = local.db_subnet_id
-  vpc_security_group_ids = [local.redis_sg_id]
-
-  tags = {
-    Name = "redis-${var.environment}-${var.project}"
-    Terraform = "True"
-    Project = var.project
-  }
+#Redis server creation
+module "redis_server" {
+  source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
+  components = [redis]
+  ami_id = local.ami_id
+  sg_id = local.redis_sg_id
+  common_tags = var.common_tags
+  project = var.project
+  environment = var.environment
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_redis" {
@@ -81,18 +76,15 @@ resource "terraform_data" "redis_setup" {
   }
 }
 
-#Create rabbidmq
-resource "aws_instance" "rabbitmq" {
-  ami           = local.ami_id
-  instance_type = var.instance_type
-  subnet_id = local.db_subnet_id
-  vpc_security_group_ids = [local.rabbitmq_sg_id]
-
-  tags = {
-    Name = "rabbitmq-${var.environment}-${var.project}"
-    Terraform = "True"
-    Project = var.project
-  }
+#Rabbitmq server creation
+module "rabbitmq_server" {
+  source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
+  components = [rabbitmq]
+  ami_id = local.ami_id
+  sg_id = local.rabbitmq_sg_id
+  common_tags = var.common_tags
+  project = var.project
+  environment = var.environment
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_rabbitmq" {

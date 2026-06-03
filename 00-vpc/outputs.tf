@@ -5,3 +5,11 @@ output "vpc" {
 output "public_subnet_id" {
   value = module.roboshop_vpc.public_subnets
 }
+
+output "private_subnet_id" {
+  value = module.roboshop_vpc.private_subnets
+}
+
+output "database_subnet_id" {
+  value = module.roboshop_vpc.database_subnets
+}
