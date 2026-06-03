@@ -11,17 +11,17 @@ module "mongodb_server" {
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_mongodb" {
-  depends_on = [aws_instance.redis]
+  depends_on = [module.mongodb_server]
 
   provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.mongodb.id}"
+    command = "aws ec2 wait instance-status-ok --instance-ids ${module.mongodb_server.id}"
   }
 }
 #Configure mongodb
 resource "terraform_data" "mongodb_setup" {
-  triggers_replace = [aws_instance.mongodb.id]
+  triggers_replace = [module.mongodb_server.id]
   connection {
-    host = aws_instance.mongodb.private_ip
+    host = module.mongodb_server.private_ip
     user = local.remote_user
     password = local.remote_user_password
     type = "ssh"
@@ -50,23 +50,23 @@ module "redis_server" {
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_redis" {
-  depends_on = [aws_instance.redis]
+  depends_on = [module.redis_server]
 
   provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.redis.id}"
+    command = "aws ec2 wait instance-status-ok --instance-ids ${module.redis_server.id}"
   }
 }
 #Configure redis
 resource "terraform_data" "redis_setup" {
-  triggers_replace = [aws_instance.redis.id]
+  triggers_replace = [module.redis_server.id]
   connection {
-    host = aws_instance.redis.private_ip
+    host = module.redis_server.private_ip
     user = local.remote_user
     password = local.remote_user_password
     type = "ssh"
   }
   
-  #copy bootstarp into mongodb server
+  #Copy bootstarp into redis server
   provisioner "file" {
     source = "bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
@@ -91,17 +91,17 @@ module "rabbitmq_server" {
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_rabbitmq" {
-  depends_on = [aws_instance.rabbitmq]
+  depends_on = [module.rabbitmq_server]
 
   provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.rabbitmq.id}"
+    command = "aws ec2 wait instance-status-ok --instance-ids ${module.rabbitmq_server.id}"
   }
 }
 #Configure rabbitmq
 resource "terraform_data" "rabbitmq_setup" {
-  triggers_replace = [aws_instance.rabbitmq.id]
+  triggers_replace = [module.rabbitmq_server.id]
   connection {
-    host = aws_instance.redis.private_ip
+    host = module.rabbitmq_server.private_ip
     user = local.remote_user
     password = local.remote_user_password
     type = "ssh"
