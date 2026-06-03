@@ -3,7 +3,7 @@ resource "aws_instance" "bastion" {
   instance_type = "t3.micro"
   subnet_id = local.public_subnet_id
   vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
-
+  user_data = file("bastion.sh")
   tags = {
     Name = "bastion-${var.environment}-${var.project}"
     Terraform = "True"
