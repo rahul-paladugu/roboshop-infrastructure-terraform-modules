@@ -3,9 +3,9 @@ output "mongodb_instance_id" {
 }
 
 output "redis_instance_id" {
-  value = module.redis_server.instance_id[1]
+  value = module.redis_server.instance_id[0]
 }
 
 output "rabbitmq_instance_id" {
-  value = module.rabbitmq_server.instance_id[2]
+  value = module.rabbitmq_server.instance_id[0]
 }
