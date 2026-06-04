@@ -121,3 +121,50 @@ resource "terraform_data" "rabbitmq_setup" {
                "sh /tmp/bootstrap.sh rabbitmq" ]
   }
 }
+
+#Mysql server creation
+module "mysql_server" {
+  source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
+  components = ["mysql"]
+  ami_id = local.ami_id
+  sg_ids = [local.mysql_sg_id]
+  instance_type = var.instance_type
+  subnet_id = local.db_subnet_id
+  common_tags = var.common_tags
+  project = var.project
+  environment = var.environment
+}
+# Wait for instance status checks to pass
+resource "null_resource" "wait_for_rabbitmq" {
+  depends_on = [module.mysql_server]
+
+  provisioner "local-exec" {
+    command = "aws ec2 wait instance-status-ok --instance-ids ${module.mysql_server.instance_id[0]}"
+  }
+}
+#Attach IAM role
+resource "aws_iam_instance_profile" "db_ssm_profile" {
+  name = "db-instance-profile"
+  role = "ssm-parameters-access-roboshop"
+}
+#Configure mysql
+resource "terraform_data" "mysql_setup" {
+  triggers_replace = [module.mysql_server.instance_id[0]]
+  connection {
+    host = module.mysql_server.private_ip[0]
+    user = local.remote_user
+    password = local.remote_user_password
+    type = "ssh"
+  }
+  
+  #copy bootstarp into mysql server
+  provisioner "file" {
+    source = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+  }
+  #Execute bootstrap.sh
+  provisioner "remote-exec" {
+    inline = [ "chmod +x /tmp/bootstrap.sh",
+               "sh /tmp/bootstrap.sh mysql var.environment" ]
+  }
+}
