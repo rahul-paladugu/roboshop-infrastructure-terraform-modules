@@ -31,3 +31,12 @@ resource "aws_vpc_security_group_ingress_rule" "rabbitmq_accepting_bastion" {
   ip_protocol = "tcp"
   to_port     = 22
 }
+
+#Mysql accepting traffic from bastion
+resource "aws_vpc_security_group_ingress_rule" "mysql_accepting_bastion" {
+  security_group_id = local.mysql_sg_id
+  referenced_security_group_id = local.bastion_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
