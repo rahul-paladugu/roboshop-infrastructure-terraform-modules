@@ -38,5 +38,5 @@ ls -l main.yaml || {
   exit 1
 }
 
-ansible-playbook -e component="$component" -e environment ="$environment" main.yaml
+ansible-playbook -e component="$component" -e environment="$environment" main.yaml
 

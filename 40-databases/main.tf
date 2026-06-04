@@ -35,7 +35,7 @@ resource "terraform_data" "mongodb_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh mongodb" ]
+               "sh /tmp/bootstrap.sh mongodb ${var.environment}" ]
   }
 }
 #Redis server creation
@@ -76,7 +76,7 @@ resource "terraform_data" "redis_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh redis" ]
+               "sh /tmp/bootstrap.sh redis ${var.environment}" ]
   }
 }
 
@@ -118,7 +118,7 @@ resource "terraform_data" "rabbitmq_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh rabbitmq" ]
+               "sh /tmp/bootstrap.sh rabbitmq ${var.environment}" ]
   }
 }
 
