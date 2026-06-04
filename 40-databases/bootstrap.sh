@@ -25,6 +25,7 @@ if [ -d "$repo_dir/.git" ]; then
   git pull >> /tmp/ansible.log 2>&1   # log output for debugging
 else
   # If repo does not exist, clone it from GitHub
+  sudo mkdir -p "$repo_dir"
   git clone "$repo_url" >> /tmp/ansible.log 2>&1
 
   # Move into the newly cloned repository
