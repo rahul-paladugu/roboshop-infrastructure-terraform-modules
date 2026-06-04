@@ -133,6 +133,7 @@ module "mysql_server" {
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
+  iam_instance_profile = aws_iam_instance_profile.db_ssm_profile.id
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_mysql" {
