@@ -165,6 +165,6 @@ resource "terraform_data" "mysql_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh mysql var.environment" ]
+               "sh /tmp/bootstrap.sh mysql ${var.environment}" ]
   }
 }
