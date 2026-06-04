@@ -135,7 +135,7 @@ module "mysql_server" {
   environment = var.environment
 }
 # Wait for instance status checks to pass
-resource "null_resource" "wait_for_rabbitmq" {
+resource "null_resource" "wait_for_mysql" {
   depends_on = [module.mysql_server]
 
   provisioner "local-exec" {
