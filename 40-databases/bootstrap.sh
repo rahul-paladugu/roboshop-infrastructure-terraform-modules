@@ -26,6 +26,7 @@ if [ -d "$repo_dir/.git" ]; then
 else
   # If repo does not exist, clone it from GitHub
   sudo mkdir -p "$repo_dir"
+  cd "$repo_dir"
   git clone "$repo_url" >> /tmp/ansible.log 2>&1
 
   # Move into the newly cloned repository
