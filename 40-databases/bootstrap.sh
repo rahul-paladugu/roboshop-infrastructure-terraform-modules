@@ -40,6 +40,7 @@ MYSQL_ROOT_PASSWORD=$(aws ssm get-parameter \
   --output text)
   
 export MYSQL_ROOT_PASSWORD
+
 # verify playbook exists before running
 ls -l main.yaml || {
   echo "main.yaml NOT FOUND - wrong repo structure" >> /tmp/ansible.log
