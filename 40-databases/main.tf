@@ -121,7 +121,14 @@ resource "terraform_data" "rabbitmq_setup" {
                "sh /tmp/bootstrap.sh rabbitmq ${var.environment}" ]
   }
 }
-
+#-------------------------------------------------------------------------------------------
+#
+#-------------------------------------------------------------------------------------------
+#IAM INstance Profile creation
+resource "aws_iam_instance_profile" "db_ssm_profile" {
+  name = "db-instance-profile"
+  role = "ssm-parameters-access-roboshop"
+}
 #Mysql server creation
 module "mysql_server" {
   source = "git::https://github.com/rahul-paladugu/Terraform-modules-aws-ec2.git"
@@ -133,7 +140,7 @@ module "mysql_server" {
   common_tags = var.common_tags
   project = var.project
   environment = var.environment
-  iam_instance_profile = aws_iam_instance_profile.db_ssm_profile.id
+  iam_instance_profile = aws_iam_instance_profile.db_ssm_profile.name
 }
 # Wait for instance status checks to pass
 resource "null_resource" "wait_for_mysql" {
@@ -143,11 +150,7 @@ resource "null_resource" "wait_for_mysql" {
     command = "aws ec2 wait instance-status-ok --instance-ids ${module.mysql_server.instance_id[0]}"
   }
 }
-#Attach IAM role
-resource "aws_iam_instance_profile" "db_ssm_profile" {
-  name = "db-instance-profile"
-  role = "ssm-parameters-access-roboshop"
-}
+
 #Configure mysql
 resource "terraform_data" "mysql_setup" {
   triggers_replace = [module.mysql_server.instance_id[0]]
