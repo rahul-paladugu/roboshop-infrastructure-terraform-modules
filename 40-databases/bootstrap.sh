@@ -47,5 +47,5 @@ ls -l main.yaml || {
   exit 1
 }
 
-ansible-playbook -e component="$component" -e environment="$environment" main.yaml
+ansible-playbook -e component="$component" -e environment="$environment"  mysql_root_password="$MYSQL_ROOT_PASSWORD" main.yaml
 
