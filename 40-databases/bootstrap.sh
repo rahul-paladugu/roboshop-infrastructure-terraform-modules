@@ -32,20 +32,11 @@ else
   cd "$repo_dir" || exit
 fi
 
-# FETCH SECRET 
-MYSQL_ROOT_PASSWORD=$(aws ssm get-parameter \
-  --name "/roboshop/db/${environment}/mysql_root_password" \
-  --with-decryption \
-  --query Parameter.Value \
-  --output text)
-  
-export MYSQL_ROOT_PASSWORD
-
 # verify playbook exists before running
 ls -l main.yaml || {
   echo "main.yaml NOT FOUND - wrong repo structure" >> /tmp/ansible.log
   exit 1
 }
 
-ansible-playbook -e component="$component" -e environment="$environment"  mysql_root_password="$MYSQL_ROOT_PASSWORD" main.yaml
+ansible-playbook -e component="$component" -e env="$environment" main.yaml
 
