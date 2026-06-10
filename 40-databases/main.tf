@@ -20,7 +20,7 @@ resource "null_resource" "wait_for_mongodb" {
 }
 #Create R53 record for Mongodb
 resource "aws_route53_record" "mongodb_r53" {
-  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  zone_id = local.zone_id
   name    = "mongodb.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
@@ -68,7 +68,7 @@ resource "null_resource" "wait_for_redis" {
 }
 #Create R53 record for Redis
 resource "aws_route53_record" "redis_r53" {
-  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  zone_id = local.zone_id
   name    = "redis.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
@@ -118,7 +118,7 @@ resource "null_resource" "wait_for_rabbitmq" {
 }
 #Create R53 record for Rabbitmq
 resource "aws_route53_record" "rabbitmq_r53" {
-  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  zone_id = local.zone_id
   name    = "rabbitmq.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
@@ -176,7 +176,7 @@ resource "null_resource" "wait_for_mysql" {
 }
 #Create R53 record for Mysql
 resource "aws_route53_record" "mysql_r53" {
-  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  zone_id = local.zone_id
   name    = "mysql.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
