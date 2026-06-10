@@ -18,6 +18,14 @@ resource "null_resource" "wait_for_mongodb" {
     command = "aws ec2 wait instance-status-ok --instance-ids ${module.mongodb_server.instance_id[0]}"
   }
 }
+#Create R53 record for Mongodb
+resource "aws_route53_record" "mongodb_r53" {
+  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  name    = "mongodb.${local.r53_common_name}"
+  type    = "A"
+  ttl     = 300
+  records = [module.mongodb_server.private_ip[0]]
+}
 #Configure mongodb
 resource "terraform_data" "mongodb_setup" {
   triggers_replace = [module.mongodb_server.instance_id[0]]
@@ -57,6 +65,14 @@ resource "null_resource" "wait_for_redis" {
   provisioner "local-exec" {
     command = "aws ec2 wait instance-status-ok --instance-ids ${module.redis_server.instance_id[0]}"
   }
+}
+#Create R53 record for Redis
+resource "aws_route53_record" "redis_r53" {
+  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  name    = "redis.${local.r53_common_name}"
+  type    = "A"
+  ttl     = 300
+  records = [module.redis_server.private_ip[0]]
 }
 #Configure redis
 resource "terraform_data" "redis_setup" {
@@ -99,6 +115,14 @@ resource "null_resource" "wait_for_rabbitmq" {
   provisioner "local-exec" {
     command = "aws ec2 wait instance-status-ok --instance-ids ${module.rabbitmq_server.instance_id[0]}"
   }
+}
+#Create R53 record for Rabbitmq
+resource "aws_route53_record" "rabbitmq_r53" {
+  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  name    = "rabbitmq.${local.r53_common_name}"
+  type    = "A"
+  ttl     = 300
+  records = [module.rabbitmq_server.private_ip[0]]
 }
 #Configure rabbitmq
 resource "terraform_data" "rabbitmq_setup" {
@@ -150,7 +174,14 @@ resource "null_resource" "wait_for_mysql" {
     command = "aws ec2 wait instance-status-ok --instance-ids ${module.mysql_server.instance_id[0]}"
   }
 }
-
+#Create R53 record for Mysql
+resource "aws_route53_record" "mysql_r53" {
+  zone_id = aws_route53_zone.roboshop_r53.zone_id
+  name    = "mysql.${local.r53_common_name}"
+  type    = "A"
+  ttl     = 300
+  records = [module.mysql_server.private_ip[0]]
+}
 #Configure mysql
 resource "terraform_data" "mysql_setup" {
   triggers_replace = [module.mysql_server.instance_id[0]]
