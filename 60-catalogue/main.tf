@@ -6,7 +6,7 @@ module "catalogue_server" {
   sg_ids = [local.catalogue_sg_id]
   instance_type = var.instance_type
   subnet_id = local.private_subnet_id
-  common_tags = var.common_tags
+  common_tags = local.common_tags
   project = var.project
   environment = var.environment
 }
