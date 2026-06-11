@@ -39,11 +39,16 @@ resource "terraform_data" "catalogue_setup" {
   }
 }
 
-#Create R53 record for Mysql
-resource "aws_route53_record" "mysql_r53" {
-  zone_id = local.zone_id
-  name    = "catalogue-${var.project}-${var.environment}.${local.r53_common_name}"
-  type    = "A"
-  ttl     = 300
-  records = [module.catalogue_server.private_ip[0]]
+#Stop the instance
+resource "aws_ec2_instance_state" "catalogue" {
+  instance_id = module.catalogue_server.id
+  state       = "stopped"
+  depends_on = [ terraform_data.catalogue_setup ]
+}
+
+#Generate AMI
+resource "aws_ami_from_instance" "catalogue" {
+  name               = "${var.project}-catalogue-ami"
+  source_instance_id = aws_ec2_instance_state.catalogue.id
+  depends_on = [ aws_ec2_instance_state.catalogue ]
 }
