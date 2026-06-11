@@ -38,3 +38,8 @@ data "aws_ami" "roboshop_ami" {
     values = ["hvm"]
   }
 }
+
+data "aws_route53_zone" "roboshop_r53" {
+  name         = "rscloudservices.icu"
+  private_zone = false
+}
