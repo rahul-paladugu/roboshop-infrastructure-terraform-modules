@@ -41,7 +41,7 @@ resource "terraform_data" "catalogue_setup" {
 
 #Stop the instance
 resource "aws_ec2_instance_state" "catalogue" {
-  instance_id = module.catalogue_server.id
+  instance_id = module.catalogue_server.instance_id[0]
   state       = "stopped"
   depends_on = [ terraform_data.catalogue_setup ]
 }
@@ -49,6 +49,6 @@ resource "aws_ec2_instance_state" "catalogue" {
 #Generate AMI
 resource "aws_ami_from_instance" "catalogue" {
   name               = "${var.project}-catalogue-ami"
-  source_instance_id = aws_ec2_instance_state.catalogue.id
+  source_instance_id = aws_ec2_instance_state.catalogue.instance_id[0]
   depends_on = [ aws_ec2_instance_state.catalogue ]
 }
