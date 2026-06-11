@@ -45,5 +45,5 @@ resource "aws_route53_record" "mysql_r53" {
   name    = "catalogue-${var.project}-${var.environment}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
-  records = [module.mysql_server.private_ip[0]]
+  records = [module.catalogue_server.private_ip[0]]
 }
