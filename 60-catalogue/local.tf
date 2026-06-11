@@ -8,5 +8,6 @@ locals {
   }
   remote_user =  data.aws_ssm_parameter.remote_user.value
   remote_user_password = data.aws_ssm_parameter.remote_user_password.value
-
+  zone_id = data.aws_route53_zone.roboshop_r53.zone_id
+  r53_common_name = "rscloudservices.icu"
 }

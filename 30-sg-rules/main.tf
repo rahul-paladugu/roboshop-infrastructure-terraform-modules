@@ -49,3 +49,12 @@ resource "aws_vpc_security_group_ingress_rule" "catalogue_accepting_bastion" {
   ip_protocol = "tcp"
   to_port     = 22
 }
+
+#Mongodb accepting traffic from Catalogue -> Catalogue loads schema to mongodb
+resource "aws_vpc_security_group_ingress_rule" "Mongodb_accepting_Catalogue" {
+  security_group_id = local.mongodb_sg_id
+  referenced_security_group_id = local.catalogue_sg_id
+  from_port   = 27017
+  ip_protocol = "tcp"
+  to_port     = 27017
+}

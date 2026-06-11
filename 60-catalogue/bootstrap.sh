@@ -1,6 +1,7 @@
 #!/bin/bash
 component=$1
 environment=$2
+project=$3
 sudo dnf install ansible -y
 #Ansible-pull is not working as expected. Hence we go with regular ansible way.
 #ansible-pull -U https://github.com/rahul-paladugu/roboshop-configuration-ansible-for-terrafrom.git -e component=$component main.yaml
@@ -38,5 +39,5 @@ ls -l main.yaml || {
   exit 1
 }
 
-ansible-playbook -i inventory.ini -e component="$component" -e env="$environment" main.yaml
+ansible-playbook -i inventory.ini -e component="$component" -e env="$environment" -e project="$project" main.yaml
 

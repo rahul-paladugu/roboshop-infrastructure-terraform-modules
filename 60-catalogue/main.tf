@@ -35,6 +35,15 @@ resource "terraform_data" "catalogue_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh catalogue ${var.environment}" ]
+               "sh /tmp/bootstrap.sh catalogue ${var.environment} ${var.project}" ]
   }
+}
+
+#Create R53 record for Mysql
+resource "aws_route53_record" "mysql_r53" {
+  zone_id = local.zone_id
+  name    = "catalogue-${var.project}-${var.environment}.${local.r53_common_name}"
+  type    = "A"
+  ttl     = 300
+  records = [module.mysql_server.private_ip[0]]
 }

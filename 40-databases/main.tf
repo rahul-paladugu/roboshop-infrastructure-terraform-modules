@@ -21,7 +21,7 @@ resource "null_resource" "wait_for_mongodb" {
 #Create R53 record for Mongodb
 resource "aws_route53_record" "mongodb_r53" {
   zone_id = local.zone_id
-  name    = "mongodb.${local.r53_common_name}"
+  name    = "mongodb-${var.project}-${var.environment}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.mongodb_server.private_ip[0]]
@@ -43,7 +43,7 @@ resource "terraform_data" "mongodb_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh mongodb ${var.environment}" ]
+               "sh /tmp/bootstrap.sh mongodb ${var.environment} ${var.environment}" ]
   }
 }
 #Redis server creation
@@ -69,7 +69,7 @@ resource "null_resource" "wait_for_redis" {
 #Create R53 record for Redis
 resource "aws_route53_record" "redis_r53" {
   zone_id = local.zone_id
-  name    = "redis.${local.r53_common_name}"
+  name    = "redis-${var.project}-${var.environment}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.redis_server.private_ip[0]]
@@ -92,7 +92,7 @@ resource "terraform_data" "redis_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh redis ${var.environment}" ]
+               "sh /tmp/bootstrap.sh redis ${var.environment} ${var.environment}" ]
   }
 }
 
@@ -119,7 +119,7 @@ resource "null_resource" "wait_for_rabbitmq" {
 #Create R53 record for Rabbitmq
 resource "aws_route53_record" "rabbitmq_r53" {
   zone_id = local.zone_id
-  name    = "rabbitmq.${local.r53_common_name}"
+  name    = "rabbitmq-${var.project}-${var.environment}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.rabbitmq_server.private_ip[0]]
@@ -142,7 +142,7 @@ resource "terraform_data" "rabbitmq_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh rabbitmq ${var.environment}" ]
+               "sh /tmp/bootstrap.sh rabbitmq ${var.environment} ${var.environment}" ]
   }
 }
 #-------------------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ resource "null_resource" "wait_for_mysql" {
 #Create R53 record for Mysql
 resource "aws_route53_record" "mysql_r53" {
   zone_id = local.zone_id
-  name    = "mysql.${local.r53_common_name}"
+  name    = "mysql-${var.project}-${var.environment}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.mysql_server.private_ip[0]]
@@ -200,6 +200,6 @@ resource "terraform_data" "mysql_setup" {
   #Execute bootstrap.sh
   provisioner "remote-exec" {
     inline = [ "chmod +x /tmp/bootstrap.sh",
-               "sh /tmp/bootstrap.sh mysql ${var.environment}" ]
+               "sh /tmp/bootstrap.sh mysql ${var.environment} ${var.environment}" ]
   }
 }
