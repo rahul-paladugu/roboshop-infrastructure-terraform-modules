@@ -63,7 +63,7 @@ resource "aws_launch_template" "catalogue" {
   placement {
     availability_zone = "us-east-1a"
   }
-  vpc_security_group_ids = local.catalogue_sg_id
+  vpc_security_group_ids = [local.catalogue_sg_id]
 
   tag_specifications {
     resource_type = "instance"
