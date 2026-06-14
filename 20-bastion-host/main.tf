@@ -1,9 +1,16 @@
+#IAM INstance Profile creation
+resource "aws_iam_instance_profile" "bastion_admin_profile" {
+  name = "bastion-instance-profile"
+  role = "bastion-admin-access"
+}
+
 resource "aws_instance" "bastion" {
   ami           = data.aws_ami.roboshop_ami.id
   instance_type = "t3.micro"
   subnet_id     = local.public_subnet_id
   vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
-  user_data     = file("bastion.sh")
+  user_data     = file("bootstrap.sh")
+  iam_instance_profile = aws_iam_instance_profile.bastion_admin_profile.name
 
   root_block_device {
     volume_size = 50
@@ -16,3 +23,4 @@ resource "aws_instance" "bastion" {
     Project   = var.project
   }
 }
+
