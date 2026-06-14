@@ -89,7 +89,7 @@ resource "aws_autoscaling_group" "catalogue" {
   max_size           = 10
   min_size           = 1
   vpc_zone_identifier = [local.private_subnet_id_1, local.private_subnet_id_2]
-  target_group_arns = aws_lb_target_group.catalogue.arn
+  target_group_arns = [aws_lb_target_group.catalogue.arn]
   launch_template {
     id      = aws_launch_template.catalogue.id
     version = aws_launch_template.catalogue.latest_version
@@ -99,7 +99,7 @@ resource "aws_autoscaling_group" "catalogue" {
   for_each =  local.asg_tags  
     content {
     key                 = tag.key
-    value               = tag.Value
+    value               = tag.value
     propagate_at_launch = true
   }
   }
