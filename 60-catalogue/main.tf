@@ -41,7 +41,7 @@ resource "terraform_data" "catalogue_setup" {
 
 #Stop the instance
 resource "aws_ec2_instance_state" "catalogue" {
-  instance_id = module.catalogue_server.instance_id
+  instance_id = module.catalogue_server.instance_id[0]
   state       = "stopped"
   depends_on = [ terraform_data.catalogue_setup ]
 }
