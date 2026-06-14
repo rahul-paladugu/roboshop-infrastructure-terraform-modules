@@ -15,3 +15,4 @@ sudo yum -y install terraform
 mkdir -p /home/ec2-user/git-repos
 cd /home/ec2-user/git-repos
 git clone https://github.com/rahul-paladugu/roboshop-infrastructure-terraform-modules
+chown -R ec2-user:ec2-user /home/ec2-user/git-repos
