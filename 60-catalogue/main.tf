@@ -47,7 +47,7 @@ resource "aws_ec2_instance_state" "catalogue_stop" {
 
 #Generate AMI
 resource "aws_ami_from_instance" "catalogue" {
-  name               = "${var.project}-catalogue-ami"
+  name               = "catalogue-${var.environment}-${var.project}-ami"
   source_instance_id = module.catalogue_server.instance_id[0]
   depends_on = [ aws_ec2_instance_state.catalogue_stop ]
 }
@@ -61,7 +61,7 @@ resource "aws_ec2_instance_state" "catalogue_terminate" {
 
 #Create launch template using new AMI
 resource "aws_launch_template" "catalogue" {
-  name = "catalogue-${var.project}-${var.environment}"
+  name = "catalogue-${var.project}-${var.environment}-template"
   lifecycle {
   create_before_destroy = true
   }
