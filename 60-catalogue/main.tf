@@ -99,6 +99,7 @@ resource "aws_lb_target_group" "catalogue" {
 
 #Create ASG
 resource "aws_autoscaling_group" "catalogue" {
+  name = "catalogue-${var.environment}-${var.project}-asg"
   desired_capacity   = 1
   max_size           = 10
   min_size           = 1
