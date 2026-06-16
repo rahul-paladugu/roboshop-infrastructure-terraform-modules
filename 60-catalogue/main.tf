@@ -81,7 +81,7 @@ resource "aws_launch_template" "catalogue" {
 
 #Create target group
 resource "aws_lb_target_group" "catalogue" {
-  name        = "catalogue-tg"
+  name        = "catalogue-${var.environment}-${var.project}-tg"
   target_type = "instance"
   port        = 8080
   protocol    = "HTTP"
