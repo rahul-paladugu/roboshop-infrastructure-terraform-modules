@@ -4,9 +4,7 @@ resource "aws_lb" "backend_alb" {
   load_balancer_type = "application"
   security_groups    = [local.backend_alb_sg_id]
   subnets            = local.public_subnet_ids
-
   enable_deletion_protection = false
-
   tags = local.common_tags
 }
 

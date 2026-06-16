@@ -11,23 +11,22 @@ module "catalogue_server" {
   environment = var.environment
 }
 # Wait for instance status checks to pass
-resource "null_resource" "wait_for_catalogue" {
-  depends_on = [module.catalogue_server]
-
-  provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${module.catalogue_server.instance_id[0]}"
-  }
+resource "time_sleep" "wait_for_catalogue" {
+  depends_on      = [module.catalogue_server]
+  create_duration = "60s"
 }
-#Configure mongodb
+
+#Configure Catalogue
 resource "terraform_data" "catalogue_setup" {
   triggers_replace = [module.catalogue_server.instance_id[0]]
+  depends_on = [ time_sleep.wait_for_catalogue ]
   connection {
     host = module.catalogue_server.private_ip[0]
     user = local.remote_user
     password = local.remote_user_password
     type = "ssh"
   }
-  #copy bootstarp into mongodb server
+  #copy bootstarp into catalogue server
   provisioner "file" {
     source = "bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
@@ -40,7 +39,7 @@ resource "terraform_data" "catalogue_setup" {
 }
 
 #Stop the instance
-resource "aws_ec2_instance_state" "catalogue" {
+resource "aws_ec2_instance_state" "catalogue_stop" {
   instance_id = module.catalogue_server.instance_id[0]
   state       = "stopped"
   depends_on = [ terraform_data.catalogue_setup ]
@@ -49,20 +48,26 @@ resource "aws_ec2_instance_state" "catalogue" {
 #Generate AMI
 resource "aws_ami_from_instance" "catalogue" {
   name               = "${var.project}-catalogue-ami"
-  source_instance_id = aws_ec2_instance_state.catalogue.instance_id
-  depends_on = [ aws_ec2_instance_state.catalogue ]
+  source_instance_id = module.catalogue_server.instance_id[0]
+  depends_on = [ aws_ec2_instance_state.catalogue_stop ]
+}
+
+#Terminate AMI after generation as it simply costs sitting stopped state
+resource "aws_ec2_instance_state" "catalogue_terminate" {
+  instance_id = module.catalogue_server.instance_id[0]
+  state       = "terminated"
+  depends_on  = [aws_ami_from_instance.catalogue]
 }
 
 #Create launch template using new AMI
 resource "aws_launch_template" "catalogue" {
   name = "catalogue-${var.project}-${var.environment}"
-
+  lifecycle {
+  create_before_destroy = true
+  }
   image_id = aws_ami_from_instance.catalogue.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
-  placement {
-    availability_zone = "us-east-1a"
-  }
   vpc_security_group_ids = [local.catalogue_sg_id]
 
   tag_specifications {
@@ -81,6 +86,15 @@ resource "aws_lb_target_group" "catalogue" {
   port        = 8080
   protocol    = "HTTP"
   vpc_id      = local.vpc_id
+  health_check {
+   path                = "/health"
+   protocol            = "HTTP"
+   healthy_threshold   = 2
+   unhealthy_threshold = 2
+   interval            = 30
+   timeout             = 5
+   matcher             = "200-299"
+  }
 }
 
 #Create ASG
@@ -94,14 +108,19 @@ resource "aws_autoscaling_group" "catalogue" {
     id      = aws_launch_template.catalogue.id
     version = aws_launch_template.catalogue.latest_version
   }
-
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+  }
   dynamic "tag" {
-  for_each =  local.asg_tags  
+   for_each =  local.asg_tags  
     content {
     key                 = tag.key
     value               = tag.value
     propagate_at_launch = true
-  }
+   }
   }
 }
 resource "aws_autoscaling_policy" "catalogue_cpu" {
