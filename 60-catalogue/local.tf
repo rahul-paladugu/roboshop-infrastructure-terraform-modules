@@ -19,4 +19,5 @@ locals {
   private_subnet_id_1 = split("," , data.aws_ssm_parameter.private_subnet_ids.value )[0]
   private_subnet_id_2 = split("," , data.aws_ssm_parameter.private_subnet_ids.value )[1]
   backend_alb_arn = data.aws_ssm_parameter.backend_alb_arn.value
+  backend_alb_listener_arn = data.aws_ssm_parameter.backend_alb_listener_arn.value
 }

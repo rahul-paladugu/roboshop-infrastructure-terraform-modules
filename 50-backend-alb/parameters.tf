@@ -4,3 +4,10 @@ resource "aws_ssm_parameter" "backend_alb_arn" {
   value = aws_lb.backend_alb.arn
   overwrite = true
 }
+
+resource "aws_ssm_parameter" "backend_alb_listener_arn" {
+  name  = "/${var.project}/${var.environment}/backend-alb-listener-arn"
+  type  = "String"
+  value = aws_lb_listener.backend_alb.arn
+  overwrite = true
+}
