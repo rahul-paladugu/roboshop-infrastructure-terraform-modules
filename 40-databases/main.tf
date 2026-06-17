@@ -25,6 +25,7 @@ resource "aws_route53_record" "mongodb_r53" {
   type    = "A"
   ttl     = 300
   records = [module.mongodb_server.private_ip[0]]
+  allow_overwrite = true
 }
 #Configure mongodb
 resource "terraform_data" "mongodb_setup" {
@@ -73,6 +74,7 @@ resource "aws_route53_record" "redis_r53" {
   type    = "A"
   ttl     = 300
   records = [module.redis_server.private_ip[0]]
+  allow_overwrite = true
 }
 #Configure redis
 resource "terraform_data" "redis_setup" {
@@ -123,6 +125,7 @@ resource "aws_route53_record" "rabbitmq_r53" {
   type    = "A"
   ttl     = 300
   records = [module.rabbitmq_server.private_ip[0]]
+  allow_overwrite = true
 }
 #Configure rabbitmq
 resource "terraform_data" "rabbitmq_setup" {
@@ -181,6 +184,7 @@ resource "aws_route53_record" "mysql_r53" {
   type    = "A"
   ttl     = 300
   records = [module.mysql_server.private_ip[0]]
+  allow_overwrite = true
 }
 #Configure mysql
 resource "terraform_data" "mysql_setup" {
