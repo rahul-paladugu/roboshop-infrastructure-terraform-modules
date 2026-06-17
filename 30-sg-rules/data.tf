@@ -33,3 +33,19 @@ data "aws_ssm_parameter" "rabbitmq_sg_id" {
 data "aws_ssm_parameter" "catalogue_sg_id" {
   name = "/${var.project}/${var.environment}/catalogue/sg_id"
 }
+
+data "aws_ssm_parameter" "user_sg_id" {
+  name = "/${var.project}/${var.environment}/user/sg_id"
+}
+
+data "aws_ssm_parameter" "cart_sg_id" {
+  name = "/${var.project}/${var.environment}/cart/sg_id"
+}
+
+data "aws_ssm_parameter" "shipping_sg_id" {
+  name = "/${var.project}/${var.environment}/shipping/sg_id"
+}
+
+data "aws_ssm_parameter" "payment_sg_id" {
+  name = "/${var.project}/${var.environment}/payment/sg_id"
+}

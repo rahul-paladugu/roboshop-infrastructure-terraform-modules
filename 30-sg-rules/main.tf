@@ -58,3 +58,39 @@ resource "aws_vpc_security_group_ingress_rule" "Mongodb_accepting_Catalogue" {
   ip_protocol = "tcp"
   to_port     = 27017
 }
+
+#User accepting traffic from Bastion
+resource "aws_vpc_security_group_ingress_rule" "user_accepting_bastion" {
+  security_group_id = local.user_sg_id
+  referenced_security_group_id = local.catalogue_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
+#Cart accepting traffic from Bastion
+resource "aws_vpc_security_group_ingress_rule" "cart_accepting_bastion" {
+  security_group_id = local.cart_sg_id
+  referenced_security_group_id = local.catalogue_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
+#Shipping accepting traffic from Bastion
+resource "aws_vpc_security_group_ingress_rule" "shipping_accepting_bastion" {
+  security_group_id = local.shipping_sg_id
+  referenced_security_group_id = local.catalogue_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
+#Payment accepting traffic from Bastion
+resource "aws_vpc_security_group_ingress_rule" "payment_accepting_bastion" {
+  security_group_id = local.payment_sg_id
+  referenced_security_group_id = local.catalogue_sg_id
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
