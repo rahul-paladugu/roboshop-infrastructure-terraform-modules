@@ -55,7 +55,7 @@ resource "aws_ami_from_instance" "catalogue" {
 #Terminate AMI after generation as it simply costs sitting stopped state
 resource "aws_ec2_instance_state" "catalogue_terminate" {
   instance_id = module.catalogue_server.instance_id[0]
-  state       = "started"
+  state       = "running"
   depends_on  = [aws_ami_from_instance.catalogue]
 }
 
