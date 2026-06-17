@@ -8,7 +8,7 @@ resource "aws_instance" "bastion" {
   ami           = data.aws_ami.roboshop_ami.id
   instance_type = "t3.micro"
   subnet_id     = local.public_subnet_id
-  vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
+  vpc_security_group_ids = [local.bastion_sg_id]
   user_data     = file("bootstrap.sh")
   iam_instance_profile = aws_iam_instance_profile.bastion_admin_profile.name
 
