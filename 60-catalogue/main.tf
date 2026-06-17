@@ -137,3 +137,20 @@ resource "aws_autoscaling_policy" "catalogue_cpu" {
     target_value = 70.0
   }
 }
+
+
+resource "aws_lb_listener_rule" "catalogue" {
+  listener_arn = local.backend_alb_arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.catalogue.arn
+  }
+
+  condition {
+    host_header {
+      values = ["catalogue.backend-alb-${var.project}-${var.environment}-rscloudservices.icu"]
+    }
+  }
+}

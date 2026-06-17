@@ -19,6 +19,10 @@ data "aws_ssm_parameter" "remote_user_password" {
   name = "/remote-user-password-${var.project}"
 }
 
+data "aws_ssm_parameter" "backend_alb_arn" {
+  name = "/${var.project}/${var.environment}/backend-alb-arn"
+}
+
 data "aws_ami" "roboshop_ami" {
   most_recent      = true
   owners           = ["973714476881"]
