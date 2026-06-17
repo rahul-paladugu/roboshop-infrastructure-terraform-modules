@@ -100,9 +100,9 @@ resource "aws_lb_target_group" "catalogue" {
 #Create ASG
 resource "aws_autoscaling_group" "catalogue" {
   name = "catalogue-${var.environment}-${var.project}-asg"
-  desired_capacity   = 1
+  desired_capacity   = 3
   max_size           = 10
-  min_size           = 1
+  min_size           = 3
   vpc_zone_identifier = [local.private_subnet_id_1, local.private_subnet_id_2]
   target_group_arns = [aws_lb_target_group.catalogue.arn]
   launch_template {
