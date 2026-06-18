@@ -124,6 +124,17 @@ resource "aws_autoscaling_group" "catalogue" {
    }
   }
 }
+
+#Terminate the instance generated to configure golden AMI
+resource "terraform_data" "catalogue_instance" {
+  triggers_replace = [module.catalogue_server.instance_id[0]]
+  depends_on = [ aws_autoscaling_group.catalogue ]
+  #Execute bootstrap.sh
+  provisioner "local-exec" {
+    command = "aws ec2 terminate-instances --instance-ids ${module.catalogue_server.instance_id[0]}"
+}
+}
+
 resource "aws_autoscaling_policy" "catalogue_cpu" {
   name                   = "catalogue-cpu-70"
   autoscaling_group_name = aws_autoscaling_group.catalogue.name
