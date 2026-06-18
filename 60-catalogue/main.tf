@@ -155,7 +155,7 @@ resource "aws_lb_listener_rule" "catalogue" {
 
   condition {
     host_header {
-      values = ["catalogue.backend-alb.${var.environment}.${var.project}.${local.r53_common_name}"]
+      values = ["catalogue.backend-alb-${var.environment}-${var.project}.${local.r53_common_name}"]
     }
   }
 }

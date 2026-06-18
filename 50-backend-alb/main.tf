@@ -28,7 +28,7 @@ resource "aws_lb_listener" "backend_alb" {
 #Create R53 record for Backend ALB
 resource "aws_route53_record" "backend_alb_r53" {
   zone_id = local.zone_id
-  name    = "*.backend-alb.${var.project}-${var.environment}.${local.r53_common_name}"
+  name    = "*.backend-alb-${var.environment}-${var.project}.${local.r53_common_name}"
   type    = "A"
   allow_overwrite = true
     alias {
