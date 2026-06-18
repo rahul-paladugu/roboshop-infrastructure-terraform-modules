@@ -52,12 +52,6 @@ resource "aws_ami_from_instance" "catalogue" {
   depends_on = [ aws_ec2_instance_state.catalogue_stop ]
 }
 
-#Terminate AMI after generation as it simply costs sitting stopped state
-resource "aws_ec2_instance_state" "catalogue_terminate" {
-  instance_id = module.catalogue_server.instance_id[0]
-  state       = "running"
-  depends_on  = [aws_ami_from_instance.catalogue]
-}
 
 #Create launch template using new AMI
 resource "aws_launch_template" "catalogue" {
@@ -100,9 +94,9 @@ resource "aws_lb_target_group" "catalogue" {
 #Create ASG
 resource "aws_autoscaling_group" "catalogue" {
   name = "catalogue-${var.environment}-${var.project}-asg"
-  desired_capacity   = 3
+  desired_capacity   = 2
   max_size           = 10
-  min_size           = 3
+  min_size           = 2
   vpc_zone_identifier = [local.private_subnet_id_1, local.private_subnet_id_2]
   target_group_arns = [aws_lb_target_group.catalogue.arn]
   launch_template {
@@ -151,7 +145,7 @@ resource "aws_autoscaling_policy" "catalogue_cpu" {
 
 
 resource "aws_lb_listener_rule" "catalogue" {
-  listener_arn = local.backend_alb_arn
+  listener_arn = local.backend_alb_listener_arn
   priority     = 10
 
   action {
@@ -161,7 +155,7 @@ resource "aws_lb_listener_rule" "catalogue" {
 
   condition {
     host_header {
-      values = ["catalogue.backend-alb.${var.project}-${var.environment}.${local.r53_common_name}"]
+      values = ["catalogue.backend-alb.${var.environment}.${var.project}.${local.r53_common_name}"]
     }
   }
 }
