@@ -140,7 +140,7 @@ resource "aws_autoscaling_policy" "catalogue_cpu" {
 
 
 resource "aws_lb_listener_rule" "catalogue" {
-  listener_arn = local.backend_alb_listener_arn
+  listener_arn = local.backend_alb_arn
   priority     = 10
 
   action {
@@ -150,7 +150,7 @@ resource "aws_lb_listener_rule" "catalogue" {
 
   condition {
     host_header {
-      values = ["catalogue.backend-alb-${var.project}-${var.environment}-rscloudservices.icu"]
+      values = ["catalogue.backend-alb.${var.project}-${var.environment}.${local.r53_common_name}"]
     }
   }
 }

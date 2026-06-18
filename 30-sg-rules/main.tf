@@ -94,3 +94,12 @@ resource "aws_vpc_security_group_ingress_rule" "payment_accepting_bastion" {
   ip_protocol = "tcp"
   to_port     = 22
 }
+
+#Catalogue accepting traffic from backend-alb
+resource "aws_vpc_security_group_ingress_rule" "catalogue_accepting_backend_alb" {
+  security_group_id = local.catalogue_sg_id
+  referenced_security_group_id = local.backend_alb_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
