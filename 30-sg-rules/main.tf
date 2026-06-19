@@ -1,3 +1,12 @@
+#Frontend-alb accepting public
+resource "aws_vpc_security_group_ingress_rule" "frontend_alb_accepting_public" {
+  security_group_id = local.frontend_alb_sg_id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port   = 443
+  ip_protocol = "tcp"
+  to_port     = 443
+}
+
 #Bastion accepting ssh access from public
 resource "aws_vpc_security_group_ingress_rule" "bastion_accepting_public" {
   security_group_id = local.bastion_sg_id
