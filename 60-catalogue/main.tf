@@ -10,6 +10,7 @@ module "catalogue_server" {
   project = var.project
   environment = var.environment
 }
+
 # Wait for instance status checks to pass
 resource "time_sleep" "wait_for_catalogue" {
   depends_on      = [module.catalogue_server]
@@ -56,17 +57,13 @@ resource "aws_ami_from_instance" "catalogue" {
 #Create launch template using new AMI
 resource "aws_launch_template" "catalogue" {
   name = "catalogue-${var.project}-${var.environment}-template"
-  lifecycle {
-  create_before_destroy = true
-  }
   image_id = aws_ami_from_instance.catalogue.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
   vpc_security_group_ids = [local.catalogue_sg_id]
-
+  update_default_version = true #When we run terraform apply again, new version will be created with new AMI
   tag_specifications {
     resource_type = "instance"
-
     tags = {
       Name = "catalogue-${local.common_name}"
     }
@@ -126,7 +123,7 @@ resource "terraform_data" "catalogue_instance" {
   #Execute bootstrap.sh
   provisioner "local-exec" {
     command = "aws ec2 terminate-instances --instance-ids ${module.catalogue_server.instance_id[0]}"
-}
+  }
 }
 
 resource "aws_autoscaling_policy" "catalogue_cpu" {
@@ -142,7 +139,6 @@ resource "aws_autoscaling_policy" "catalogue_cpu" {
     target_value = 70.0
   }
 }
-
 
 resource "aws_lb_listener_rule" "catalogue" {
   listener_arn = local.backend_alb_listener_arn
