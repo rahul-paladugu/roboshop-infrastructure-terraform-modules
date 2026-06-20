@@ -1,3 +1,4 @@
+#SG Id's stored in parameter store
 resource "aws_ssm_parameter" "sg_id" {
     count = length(var.components)
   name  = "/${var.project}/${var.environment}/${var.components[count.index]}/sg_id"

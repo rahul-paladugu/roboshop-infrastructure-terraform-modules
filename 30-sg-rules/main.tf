@@ -112,3 +112,38 @@ resource "aws_vpc_security_group_ingress_rule" "catalogue_accepting_backend_alb"
   ip_protocol = "tcp"
   to_port     = 8080
 }
+
+#User accepting traffic from backend-alb
+resource "aws_vpc_security_group_ingress_rule" "user_accepting_backend_alb" {
+  security_group_id = local.user_sg_id
+  referenced_security_group_id = local.backend_alb_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#Cart accepting traffic from backend-alb
+resource "aws_vpc_security_group_ingress_rule" "cart_accepting_backend_alb" {
+  security_group_id = local.cart_sg_id
+  referenced_security_group_id = local.backend_alb_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#Shipping accepting traffic from backend-alb
+resource "aws_vpc_security_group_ingress_rule" "shipping_accepting_backend_alb" {
+  security_group_id = local.shipping_sg_id
+  referenced_security_group_id = local.backend_alb_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+#Payment accepting traffic from backend-alb
+resource "aws_vpc_security_group_ingress_rule" "payment_accepting_backend_alb" {
+  security_group_id = local.payment_sg_id
+  referenced_security_group_id = local.backend_alb_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}

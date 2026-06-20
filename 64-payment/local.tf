@@ -1,7 +1,7 @@
 locals {
   ami_id = data.aws_ami.roboshop_ami.id
   common_name = "${var.environment}-${var.project}"
-  cart_sg_id = data.aws_ssm_parameter.cart_sg_id.value
+  payment_sg_id = data.aws_ssm_parameter.payment_sg_id.value
   private_subnet_id = split("," , data.aws_ssm_parameter.private_subnet_ids.value )[0]
   common_tags = {
     Terraform = "True"
@@ -12,7 +12,7 @@ locals {
   r53_common_name = "rscloudservices.icu"
   vpc_id = data.aws_ssm_parameter.vpc_id.value
   asg_tags = {
-    Name = "cart-${var.environment}-${var.project}-asg"
+    Name = "payment-${var.environment}-${var.project}"
     Terraform = "True"
     environment = var.environment
   }

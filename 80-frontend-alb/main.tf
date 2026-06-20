@@ -1,3 +1,4 @@
+#Frontend ALB Creation
 resource "aws_lb" "frontend_alb" {
   name               = "frontend-alb-${local.common_name}"
   internal           = false
@@ -8,7 +9,7 @@ resource "aws_lb" "frontend_alb" {
   tags = local.common_tags
 }
 
-#BACKEND ALB LISTENING ON PORT 80
+#Frontend ALB LISTENING ON PORT 80
 resource "aws_lb_listener" "frontend_alb" {
   load_balancer_arn = aws_lb.frontend_alb.arn
   port              = 443

@@ -12,11 +12,11 @@ locals {
   r53_common_name = "rscloudservices.icu"
   vpc_id = data.aws_ssm_parameter.vpc_id.value
   asg_tags = {
-    Name = "user-${var.environment}-${var.project}-asg"
+    Name = "user-${var.environment}-${var.project}"
     Terraform = "True"
     environment = var.environment
   }
   private_subnet_id_1 = split("," , data.aws_ssm_parameter.private_subnet_ids.value )[0]
   private_subnet_id_2 = split("," , data.aws_ssm_parameter.private_subnet_ids.value )[1]
-
+  backend_alb_listener_arn = data.aws_ssm_parameter.backend_alb_listener_arn.value
 }

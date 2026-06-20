@@ -12,7 +12,7 @@ locals {
   r53_common_name = "rscloudservices.icu"
   vpc_id = data.aws_ssm_parameter.vpc_id.value
   asg_tags = {
-    Name = "catalogue-${var.environment}-${var.project}-asg"
+    Name = "catalogue-${var.environment}-${var.project}"
     Terraform = "True"
     environment = var.environment
   }

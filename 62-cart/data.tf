@@ -8,7 +8,7 @@ data "aws_ssm_parameter" "vpc_id" {
 }
 
 data "aws_ssm_parameter" "private_subnet_ids" {
-  name = "/${var.project}/${var.environment}/database_subnet_ids"
+  name = "/${var.project}/${var.environment}/private_subnet_ids"
 }
 
 data "aws_ssm_parameter" "remote_user" {
@@ -42,4 +42,8 @@ data "aws_ami" "roboshop_ami" {
 data "aws_route53_zone" "roboshop_r53" {
   name         = "rscloudservices.icu"
   private_zone = false
+}
+
+data "aws_ssm_parameter" "backend_alb_listener_arn" {
+  name = "/${var.project}/${var.environment}/backend-alb-listener-arn"
 }

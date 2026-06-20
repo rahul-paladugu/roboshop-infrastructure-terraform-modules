@@ -1,3 +1,4 @@
+#ACM Certificate details stored in SSM Parameter Store.
 resource "aws_ssm_parameter" "acm_certificate" {
   name  = "/${var.project}/${var.environment}/certificate_arn"
   type  = "String"

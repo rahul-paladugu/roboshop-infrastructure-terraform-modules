@@ -10,6 +10,7 @@ module "cart_server" {
   project = var.project
   environment = var.environment
 }
+
 # Wait for instance status checks to pass
 resource "time_sleep" "wait_for_cart" {
   depends_on      = [module.cart_server]
@@ -38,41 +39,31 @@ resource "terraform_data" "cart_setup" {
   }
 }
 
-#Stop the instance
+#Stop the instance to take snapshot
 resource "aws_ec2_instance_state" "cart_stop" {
   instance_id = module.cart_server.instance_id[0]
   state       = "stopped"
   depends_on = [ terraform_data.cart_setup ]
 }
 
-#Generate Golden AMI
+#Generate AMI
 resource "aws_ami_from_instance" "cart" {
-  name               = "cart-${var.environment}-${var.project}-ami"
+  name               = "ami-cart-${var.environment}-${var.project}"
   source_instance_id = module.cart_server.instance_id[0]
   depends_on = [ aws_ec2_instance_state.cart_stop ]
 }
 
-#Terminate AMI after generation as it simply costs sitting stopped state
-resource "aws_ec2_instance_state" "cart_start" {
-  instance_id = module.cart_server.instance_id[0]
-  state       = "running"
-  depends_on  = [aws_ami_from_instance.cart]
-}
 
 #Create launch template using new AMI
 resource "aws_launch_template" "cart" {
-  name = "cart-${var.project}-${var.environment}-template"
-  lifecycle {
-  create_before_destroy = true
-  }
+  name = "template-cart-${var.project}-${var.environment}"
   image_id = aws_ami_from_instance.cart.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
   vpc_security_group_ids = [local.cart_sg_id]
-
+  update_default_version = true #When we run terraform apply again, new version will be created with new AMI
   tag_specifications {
     resource_type = "instance"
-
     tags = {
       Name = "cart-${local.common_name}"
     }
@@ -81,7 +72,7 @@ resource "aws_launch_template" "cart" {
 
 #Create target group
 resource "aws_lb_target_group" "cart" {
-  name        = "cart-${var.environment}-${var.project}-tg"
+  name        = "tg-cart-${var.environment}-${var.project}"
   target_type = "instance"
   port        = 8080
   protocol    = "HTTP"
@@ -99,10 +90,10 @@ resource "aws_lb_target_group" "cart" {
 
 #Create ASG
 resource "aws_autoscaling_group" "cart" {
-  name = "-${var.environment}-${var.project}-asg"
-  desired_capacity   = 3
+  name = "asg-cart-${var.environment}-${var.project}"
+  desired_capacity   = 2
   max_size           = 10
-  min_size           = 3
+  min_size           = 2
   vpc_zone_identifier = [local.private_subnet_id_1, local.private_subnet_id_2]
   target_group_arns = [aws_lb_target_group.cart.arn]
   launch_template {
@@ -124,6 +115,17 @@ resource "aws_autoscaling_group" "cart" {
    }
   }
 }
+
+#Terminate the instance generated to configure golden AMI
+resource "terraform_data" "cart_instance" {
+  triggers_replace = [module.cart_server.instance_id[0]]
+  depends_on = [ aws_autoscaling_group.cart ]
+  #Execute bootstrap.sh
+  provisioner "local-exec" {
+    command = "aws ec2 terminate-instances --instance-ids ${module.cart_server.instance_id[0]}"
+  }
+}
+
 resource "aws_autoscaling_policy" "cart_cpu" {
   name                   = "cart-cpu-70"
   autoscaling_group_name = aws_autoscaling_group.cart.name
@@ -135,5 +137,21 @@ resource "aws_autoscaling_policy" "cart_cpu" {
     }
 
     target_value = 70.0
+  }
+}
+
+resource "aws_lb_listener_rule" "cart" {
+  listener_arn = local.backend_alb_listener_arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cart.arn
+  }
+
+  condition {
+    host_header {
+      values = ["cart.backend-alb-${var.environment}-${var.project}.${local.r53_common_name}"]
+    }
   }
 }

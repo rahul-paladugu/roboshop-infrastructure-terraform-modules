@@ -21,7 +21,7 @@ resource "null_resource" "wait_for_mongodb" {
 #Create R53 record for Mongodb
 resource "aws_route53_record" "mongodb_r53" {
   zone_id = local.zone_id
-  name    = "mongodb-${var.project}-${var.environment}.${local.r53_common_name}"
+  name    = "mongodb-${var.environment}-${var.project}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.mongodb_server.private_ip[0]]
@@ -70,7 +70,7 @@ resource "null_resource" "wait_for_redis" {
 #Create R53 record for Redis
 resource "aws_route53_record" "redis_r53" {
   zone_id = local.zone_id
-  name    = "redis-${var.project}-${var.environment}.${local.r53_common_name}"
+  name    = "redis-${var.environment}-${var.project}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.redis_server.private_ip[0]]
@@ -121,7 +121,7 @@ resource "null_resource" "wait_for_rabbitmq" {
 #Create R53 record for Rabbitmq
 resource "aws_route53_record" "rabbitmq_r53" {
   zone_id = local.zone_id
-  name    = "rabbitmq-${var.project}-${var.environment}.${local.r53_common_name}"
+  name    = "rabbitmq-${var.environment}-${var.project}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.rabbitmq_server.private_ip[0]]
@@ -148,10 +148,7 @@ resource "terraform_data" "rabbitmq_setup" {
                "sh /tmp/bootstrap.sh rabbitmq ${var.environment} ${var.environment}" ]
   }
 }
-#-------------------------------------------------------------------------------------------
-#
-#-------------------------------------------------------------------------------------------
-#IAM INstance Profile creation
+#IAM INstance Profile creation for sql to access parameter store
 resource "aws_iam_instance_profile" "db_ssm_profile" {
   name = "db-instance-profile"
   role = "ssm-parameters-access-roboshop"
@@ -180,7 +177,7 @@ resource "null_resource" "wait_for_mysql" {
 #Create R53 record for Mysql
 resource "aws_route53_record" "mysql_r53" {
   zone_id = local.zone_id
-  name    = "mysql-${var.project}-${var.environment}.${local.r53_common_name}"
+  name    = "mysql-${var.environment}-${var.project}.${local.r53_common_name}"
   type    = "A"
   ttl     = 300
   records = [module.mysql_server.private_ip[0]]
