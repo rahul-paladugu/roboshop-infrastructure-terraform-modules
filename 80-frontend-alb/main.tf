@@ -9,7 +9,7 @@ resource "aws_lb" "frontend_alb" {
   tags = local.common_tags
 }
 
-#Frontend ALB LISTENING ON PORT 80
+#Frontend ALB LISTENING ON PORT 443
 resource "aws_lb_listener" "frontend_alb" {
   load_balancer_arn = aws_lb.frontend_alb.arn
   port              = 443
@@ -20,8 +20,8 @@ resource "aws_lb_listener" "frontend_alb" {
 
     fixed_response {
       status_code  = "404"
-      content_type = "text/plain"
-      message_body = "Not Found"
+      content_type = "text/html"
+      message_body = "<h1> Hi this is alb created for Roboshop-Application<h1>"
     }
   }
 }
