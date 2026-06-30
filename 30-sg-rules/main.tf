@@ -147,3 +147,93 @@ resource "aws_vpc_security_group_ingress_rule" "payment_accepting_backend_alb" {
   ip_protocol = "tcp"
   to_port     = 8080
 }
+
+#Redis accepting traffic from User
+resource "aws_vpc_security_group_ingress_rule" "redis_accepting_user" {
+  security_group_id = local.redis_sg_id
+  referenced_security_group_id = local.user_sg_id
+  from_port   = 6379
+  ip_protocol = "tcp"
+  to_port     = 6379
+}
+
+#Redis accepting traffic from Cart
+resource "aws_vpc_security_group_ingress_rule" "redis_accepting_cart" {
+  security_group_id = local.redis_sg_id
+  referenced_security_group_id = local.cart_sg_id
+  from_port   = 6379
+  ip_protocol = "tcp"
+  to_port     = 6379
+}
+
+#Mysql accepting traffic from Shipping
+resource "aws_vpc_security_group_ingress_rule" "mysql_accepting_shipping" {
+  security_group_id = local.mysql_sg_id
+  referenced_security_group_id = local.shipping_sg_id
+  from_port   = 3306
+  ip_protocol = "tcp"
+  to_port     = 3306
+}
+
+#Rabbitmq accepting traffic from Payment
+resource "aws_vpc_security_group_ingress_rule" "rabbitmq_accepting_payment" {
+  security_group_id = local.rabbitmq_sg_id
+  referenced_security_group_id = local.payment_sg_id
+  from_port   = 5672
+  ip_protocol = "tcp"
+  to_port     = 5672
+}
+
+#Catalogue accepting traffic from Cart
+resource "aws_vpc_security_group_ingress_rule" "catalogue_accepting_cart" {
+  security_group_id = local.catalogue_sg_id
+  referenced_security_group_id = local.cart_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#Cart accepting traffic from Shipping
+resource "aws_vpc_security_group_ingress_rule" "cart_accepting_shipping" {
+  security_group_id = local.cart_sg_id
+  referenced_security_group_id = local.shipping_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#User accepting traffic from Payment
+resource "aws_vpc_security_group_ingress_rule" "user_accepting_shipping" {
+  security_group_id = local.user_sg_id
+  referenced_security_group_id = local.payment_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#Cart accepting traffic from Payment
+resource "aws_vpc_security_group_ingress_rule" "cart_accepting_shipping" {
+  security_group_id = local.cart_sg_id
+  referenced_security_group_id = local.payment_sg_id
+  from_port   = 8080
+  ip_protocol = "tcp"
+  to_port     = 8080
+}
+
+#Backend-alb accepting traffic from Payment
+resource "aws_vpc_security_group_ingress_rule" "backend_alb_accepting_frontend" {
+  security_group_id = local.backend_alb_sg_id
+  referenced_security_group_id = local.frontend_sg_id
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+}
+
+#frontend accepting traffic from frontend_alb
+resource "aws_vpc_security_group_ingress_rule" "frontend_accepting_frontend_alb" {
+  security_group_id = local.frontend_alb_sg_id
+  referenced_security_group_id = local.frontend_alb_sg_id
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+}
